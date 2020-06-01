@@ -68,6 +68,7 @@ Metadata:
           - EfsPerformanceMode
           - EfsThroughputMode
           - EfsProvisionedThroughputInMibps
+          - MinecraftStack
           - MonitoringStack
       - Label:
           default: AWS Quick Start configuration
@@ -137,6 +138,8 @@ Metadata:
         default: EFS throughput mode
       EfsProvisionedThroughputInMibps:
         default: EFS provisioned throughput in Mibps
+      MinecraftStack:
+        default: Minecraft stack
       MonitoringStack:
         default: Monitoring stack
       NumberOfAZs:
@@ -408,6 +411,11 @@ Parameters:
     MaxValue: 1024
     Default: 0
     Description: Set to 0 if EfsThroughputMode is set to bursting. Only has an effect when EfsStorageClass is enabled. If using Provisioned Throughput, value must be between 0-1024.
+  MinecraftStack:
+    Type: String
+    AllowedValues: [ "Enabled", "Disabled" ]
+    Default: "Disabled"
+    Description: "Create Minecraft server."
   MonitoringStack:
     Type: String
     AllowedValues: [ "Prometheus + Grafana", "None" ]
@@ -496,7 +504,7 @@ Resources:
       cfn-lint: { config: { ignore_checks: [ W9901 ] } }
     Properties:
       TemplateURL: !Sub
-        - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/amazon-eks.template.yaml'
+        - 'https://cf-templates-1bbkxu1s57dez-us-east-2.s3.us-east-2.amazonaws.com/amazon-eks.template.yaml'
         - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
           S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:
@@ -541,6 +549,7 @@ Resources:
         EfsPerformanceMode: !Ref EfsPerformanceMode
         EfsThroughputMode: !Ref EfsThroughputMode
         EfsProvisionedThroughputInMibps: !Ref EfsProvisionedThroughputInMibps
+        ProvisionMinecraftStack: !Ref MinecraftStack
         ProvisionMonitoringStack: !Ref MonitoringStack
         ProvisionBastionHost: !Ref ProvisionBastionHost
         EKSPublicAccessCIDRs: !Join [ ',', !Ref 'EKSPublicAccessCIDRs' ]

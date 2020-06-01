@@ -1,0 +1,71 @@
+[
+
+    {
+        "ParameterKey": "NumberOfAZs",
+        "ParameterValue": "2"
+    },
+    {
+        "ParameterKey": "AvailabilityZones",
+        "ParameterValue": "us-west-2c,us-west-2d"
+    },
+    {
+        "ParameterKey": "VPCCIDR",
+        "ParameterValue": "10.67.0.0/16"
+    },
+    {
+        "ParameterKey": "PrivateSubnet1CIDR",
+        "ParameterValue": "10.67.4.0/24"
+    },
+    {
+        "ParameterKey": "PrivateSubnet2CIDR",
+        "ParameterValue": "10.67.5.0/24"
+    },
+    {
+        "ParameterKey": "PrivateSubnet3CIDR",
+        "ParameterValue": "10.67.6.0/24"
+    },
+    {
+        "ParameterKey": "PublicSubnet1CIDR",
+        "ParameterValue": "10.67.1.0/24"
+    },
+    {
+        "ParameterKey": "PublicSubnet2CIDR",
+        "ParameterValue": "10.67.2.0/24"
+    },
+    {
+        "ParameterKey": "PublicSubnet3CIDR",
+        "ParameterValue": "10.67.3.0/24"
+    },
+    {
+        "ParameterKey": "ProvisionBastionHost",
+        "ParameterValue": "Enabled"
+    },
+    {
+        "ParameterKey": "RemoteAccessCIDR",
+        "ParameterValue": "52.14.171.115/32"
+    },
+    {
+        "ParameterKey": "KeyPairName",
+        "ParameterValue": "jmichealAWS"
+    },
+    {
+        "ParameterKey": "ALBIngressController",
+        "ParameterValue": "Enabled"
+    },
+    {
+        "ParameterKey": "MonitoringStack",
+        "ParameterValue": "Prometheus + Grafana"
+    },
+    {
+        "ParameterKey": "MinecraftStack",
+        "ParameterValue": "Enabled"
+    },
+    {
+        "ParameterKey": "NumberOfNodes",
+        "ParameterValue": "2"
+    },
+    {
+        "ParameterKey": "MaxNumberOfNodes",
+        "ParameterValue": "2"
+    }
+]

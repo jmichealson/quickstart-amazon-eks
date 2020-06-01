@@ -175,6 +175,11 @@ Parameters:
     Type: String
     AllowedValues: [ "Enabled", "Disabled" ]
     Default: "Disabled"
+  ProvisionMinecraftStack:
+    Type: String
+    AllowedValues: [ "Enabled", "Disabled" ]
+    Default: "Disabled"
+    Description: "Create Minecraft server."
   ProvisionMonitoringStack:
     Type: String
     AllowedValues: [ "Prometheus + Grafana", "None" ]
@@ -256,6 +261,7 @@ Conditions:
   EnableClusterAutoScaler: !Equals [!Ref 'ProvisionClusterAutoScaler', 'Enabled']
   EnableALBIngressController: !Equals [!Ref 'ProvisionALBIngressController', 'Enabled']
   EnableMonitoringPrometheusGrafana: !Equals [!Ref 'ProvisionMonitoringStack', 'Prometheus + Grafana']
+  EnableMinecraft: !Equals [!Ref 'ProvisionMinecraftStack', 'Enabled']
   EnableEfs: !Equals [!Ref 'EfsStorageClass', 'Enabled']
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
 Resources:
@@ -599,6 +605,20 @@ Resources:
       Parameters:
         KubeManifestLambdaArn: !GetAtt FunctionStack.Outputs.KubeManifestLambdaArn
         OIDCIssuerURLWithoutProtocol:  !Join [ '', !Split [ 'https://', !GetAtt EKSControlPlane.Outputs.OIDCIssuerURL ] ]
+        ClusterName: !GetAtt EKSControlPlane.Outputs.EKSName
+  MinecraftStack:
+    Metadata:
+      DependsOn:
+        - !Ref ControlPlaneSecurityGroupIngress
+        - !Ref NodeGroupStack
+    Condition: EnableMinecraft
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub
+        - 'https://cf-templates-1bbkxu1s57dez-us-east-2.s3.us-east-2.amazonaws.com/amazon-eks-minecraft.template.yaml'
+        - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+          S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+      Parameters:
         ClusterName: !GetAtt EKSControlPlane.Outputs.EKSName
 Outputs:
   KubeManifestLambdaArn:
